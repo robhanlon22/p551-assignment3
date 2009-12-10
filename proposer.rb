@@ -1,0 +1,2 @@
+class Proposer
+end
