@@ -13,6 +13,8 @@ class Proposer < PaxosRole
     @propose_thread = Thread.new do 
       loop do
         @propose_mutex.synchronize do 
+          @n += 1
+          
           replicas = @supervisor.replicas
 
           responses = replicas.inject([]) do |memo, replica|
@@ -30,14 +32,12 @@ class Proposer < PaxosRole
             end
           end
 
-          number = @n unless number
+          number and @n = number or number = @n
 
           responses.each do |response|
             response.acceptor.request_accept(Proposal.new(number, value, self))
           end
         end
-
-        @n += 1
       end
     end
   end

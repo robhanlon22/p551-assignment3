@@ -25,12 +25,13 @@ class Acceptor < PaxosRole
     @propose_mutex.synchronize do
       if proposal.number >= @highest_prepare
         @highest_accepted = proposal
-        return true
+        @supervisor.replicas.each do |replica|
+          replica.learner.learn(proposal.value)
+        end
       end
     end
   end
   
+  private
   Response = Struct.new :highest_accepted, :acceptor
-  
-  Proposal = Struct.new :number, :value, :proposer
 end
