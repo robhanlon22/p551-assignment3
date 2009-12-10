@@ -22,7 +22,7 @@ class Proposer < PaxosRole
             memo << response if response
           end
 
-          next if responses.size < (replicas.size / 2.0).ceil
+          next if responses.size < replicas.size / 2
 
           number = responses.inject(nil) do |memo, response|
             if response.highest_accepted
