@@ -3,22 +3,21 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 # Require all our paxos stuff
-require 'paxos_role'
 require 'proposer'
 require 'acceptor'
 require 'learner'
 require 'supervisor'
 
-class RPCExporter < PaxosRole
+class RPCExporter
   attr_reader :proposer, :acceptor, :learner
 
   def initialize(supervisor)
     @proposer = Proposer.new(supervisor)
-    @acceptor = Acceptor.new(supervisor) 
+    @acceptor = Acceptor.new(supervisor)
     @learner  = Learner.new(supervisor)
     supervisor.add_replica(self)
   end
-  
+
   def acceptor_state
     return @acceptor.highest_accepted, @acceptor.highest_prepare, @acceptor.proposals_made
   end
@@ -30,6 +29,4 @@ class RPCExporter < PaxosRole
   def learn
     @learner.learn
   end
-
-  protected :proposer, :acceptor, :learner
 end
