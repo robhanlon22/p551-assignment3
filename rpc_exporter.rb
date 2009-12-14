@@ -18,6 +18,10 @@ class RPCExporter < PaxosRole
     @learner  = Learner.new(supervisor)
     supervisor.add_replica(self)
   end
+  
+  def acceptor_state
+    return @acceptor.highest_accepted, @acceptor.highest_prepare, @acceptor.proposals_made
+  end
 
   def propose(value)
     @proposer.propose(value)

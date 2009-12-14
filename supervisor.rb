@@ -11,7 +11,7 @@ class Supervisor
 
   def add_replica(replica, id=@next_id)
     if @replicas.add?(replica)
-      @id_map[id]
+      @id_map[id.to_s] = replica
       @next_id += 1
     end
   end

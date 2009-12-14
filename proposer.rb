@@ -6,7 +6,6 @@ class Proposer < PaxosRole
     @n = 0
   end
 
-  protected
   def propose(value)
     kill_thread
 
@@ -16,9 +15,10 @@ class Proposer < PaxosRole
           @n += 1
           
           replicas = @supervisor.replicas
+          puts "Supervisor has: #{replicas.size} replicas"
 
           responses = replicas.inject([]) do |memo, replica|
-            response = replica.paxos_instance.acceptor.prepare(@n)
+            response = replica.acceptor.prepare(@n)
             memo << response if response
           end
 
@@ -43,8 +43,12 @@ class Proposer < PaxosRole
   end
 
   def value_learned!
-    @propose_thread.kill if @propose_thread 
+    if @propose_thread
+      @propose_thread.kill
+      @n = 0
+    end
   end
 
-  alias_method :value_learned!, :kill_thread
+  protected
+  alias_method :kill_thread, :value_learned!
 end
