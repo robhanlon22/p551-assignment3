@@ -32,7 +32,7 @@ Test log (created by redirecting test_input.txt to client.rb):
 
 [Input from the test_input.txt file in brackets]
 
-Preparing to reach Paxos service with supervisor URI: druby://dabears.local:51015
+Preparing to reach Paxos service with supervisor URI: druby://localhost:65535
 Successfully connected to supervisor, currently supervising 3 replicas
 
 Select from the following options:
