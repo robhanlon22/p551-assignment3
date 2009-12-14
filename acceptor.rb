@@ -46,7 +46,7 @@ class Acceptor
       if proposal.number >= @highest_prepare
         @highest_accepted = proposal
 
-        @acceptor_row.highest_proposal = Marshal.dump(@highest_accepted)
+        @acceptor_row.highest_proposal = Marshal.dump([proposal.number, proposal.value])
         @acceptor_row.save
 
         @supervisor.replicas.each do |replica|
