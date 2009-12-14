@@ -17,6 +17,7 @@ class Learner
   end
 
   def report(value, acceptor)
+    return if @learned_value
     @mutex_me.synchronize do
       @learned[acceptor] = value
       @learned.inject(Hash.new(0)) do |value_counts, key_value|
