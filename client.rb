@@ -14,8 +14,13 @@ class Client
       3 => self.method(:learn),
       4 => self.method(:propose_and_learn),
       5 => self.method(:acceptor_state),
-      6 => Kernel.method(:exit)
+      6 => self.method(:quit)
     } if @@options.nil?
+  end
+
+  def quit
+    puts "Exiting the Paxos client program. Goodbye!", ""
+    exit(0)    
   end
 
   def view_replicas
