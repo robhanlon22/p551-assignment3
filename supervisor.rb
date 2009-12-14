@@ -34,4 +34,8 @@ class Supervisor
   def [](id)
     replica_by_id(id)
   end
+  
+  def replicas_by_id(&block)
+    @id_map.each(&block)
+  end
 end
