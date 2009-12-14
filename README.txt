@@ -50,6 +50,7 @@ Your selection please: [2]
         3
 To propose a value, first pick a replica to propose to: [1]
 Now propose a value: [foobar]
+Proposing value 'foobar' to replica with id '1'
 
 Select from the following options:
         1. View replicas
@@ -66,6 +67,7 @@ Your selection please: [2]
         3
 To propose a value, first pick a replica to propose to: [3]
 Now propose a value: [foobar]
+Proposing value 'foobar' to replica with id '3'
 
 Select from the following options:
         1. View replicas
@@ -82,6 +84,7 @@ Your selection please: [2]
         3
 To propose a value, first pick a replica to propose to: [2]
 Now propose a value: [baz]
+Proposing value 'baz' to replica with id '2'
 
 Select from the following options:
         1. View replicas
