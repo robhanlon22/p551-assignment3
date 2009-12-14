@@ -11,9 +11,9 @@ class Proposer
   def propose(value)
     kill_thread
 
-    @propose_thread = Thread.new do
-      loop do
-        @propose_mutex.synchronize do
+    @propose_mutex.synchronize do
+      @propose_thread = Thread.new do
+        loop do
           @n += 1
 
           puts 'i'
@@ -58,8 +58,10 @@ class Proposer
 
   def value_learned!
     puts 'rhombus'
-    if @propose_thread
-      @propose_thread.kill
+    @propose_mutex.synchronize do
+      if @propose_thread
+        @propose_thread.kill
+      end
     end
   end
 

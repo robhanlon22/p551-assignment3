@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'proposal'
 require 'response'
 require 'active_record'
@@ -27,17 +28,22 @@ class Acceptor
     puts 'blah'
     @propose_mutex.synchronize do
       puts "Received prepare request with proposal number #{proposal_number}"
+      puts "Current highest prepare number so far: #{@highest_prepare}"
       @prepares_made += 1
-      puts 'hey'
-      if @proposal_number > @highest_prepare
-        @highest_prepare = @proposal_number
+      puts "hey: proposal_number (#{proposal_number}) > @highest_prepare (#{@highest_prepare}) = #{proposal_number > @highest_prepare}"
+      if proposal_number > @highest_prepare
+        @highest_prepare = proposal_number
 
-        puts 'wha'
-        @acceptor_row.highest_prepare = @highest_prepare
-        @acceptor_row.save
+        puts "WHA?! @highest_prepare is now: #{@highest_prepare}"
+        begin
+          @acceptor_row.highest_prepare = @highest_prepare
+          @acceptor_row.save!
+        rescue Exception => e
+        end
         puts 'ha'
-        Response.new(@highest_accepted.number, self)
+        return Response.new(@highest_accepted.number, self)
       end
+      puts 'hotdogs'
     end
   end
 
@@ -47,12 +53,15 @@ class Acceptor
         puts 'squid'
 
         @highest_accepted = proposal
-        @acceptor_row.highest_proposal = Marshal.dump(@highest_accepted)
-        @acceptor_row.save
+        begin
+          @acceptor_row.highest_proposal = Marshal.dump(@highest_accepted)
+          @acceptor_row.save
+        rescue Exception => e
+        end
 
         @supervisor.replicas.each do |replica|
           puts 'octopus'
-          replica.learner.learn(proposal.value)
+          replica.learner.report(proposal.value, self)
         end
       end
     end

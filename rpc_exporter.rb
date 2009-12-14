@@ -19,7 +19,7 @@ class RPCExporter
   end
 
   def acceptor_state
-    return @acceptor.highest_accepted, @acceptor.highest_prepare, @acceptor.proposals_made
+    return @acceptor.highest_accepted, @acceptor.highest_prepare, @acceptor.prepares_made
   end
 
   def propose(value)
