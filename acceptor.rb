@@ -31,7 +31,4 @@ class Acceptor < PaxosRole
       end
     end
   end
-  
-  private
-  Response = Struct.new :highest_accepted, :acceptor
 end

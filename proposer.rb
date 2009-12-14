@@ -47,7 +47,4 @@ class Proposer < PaxosRole
   end
 
   alias_method :value_learned!, :kill_thread
-
-  private
-  Proposal = Struct.new :number, :value, :proposer
 end
