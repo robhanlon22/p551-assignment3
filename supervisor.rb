@@ -1,8 +1,10 @@
 require 'set'
 
 class Supervisor
+  include DRbUndumped
+
   attr_reader :replicas
-  
+
   def initialize
     @next_id = 1
     @replicas = Set.new

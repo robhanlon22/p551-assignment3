@@ -4,7 +4,6 @@ require 'drb'
 require File.join(File.dirname(__FILE__), 'rpc_exporter')
 
 class Client
-
   @@options = nil
 
   def initialize(supervisor)

@@ -3,7 +3,7 @@
 require 'drb'
 require File.join(File.dirname(__FILE__), 'supervisor')
 
-DRb.start_service "druby://dabears.local:51015", Supervisor.new
+DRb.start_service "druby://localhost:65535", Supervisor.new
 
 puts "This Paxos supervisor can be reached at: #{DRb.uri}"
 

@@ -2,8 +2,11 @@ require 'rubygems'
 require 'proposal'
 require 'response'
 require 'active_record'
+require 'drb'
 
 class Acceptor
+  include DRbUndumped
+
   MIN_PROPOSAL_VALUE = 1
 
   attr_reader :highest_accepted, :highest_prepare, :prepares_made
@@ -25,42 +28,28 @@ class Acceptor
   end
 
   def prepare(proposal_number)
-    puts 'blah'
     @propose_mutex.synchronize do
-      puts "Received prepare request with proposal number #{proposal_number}"
-      puts "Current highest prepare number so far: #{@highest_prepare}"
       @prepares_made += 1
-      puts "hey: proposal_number (#{proposal_number}) > @highest_prepare (#{@highest_prepare}) = #{proposal_number > @highest_prepare}"
       if proposal_number > @highest_prepare
         @highest_prepare = proposal_number
 
-        puts "WHA?! @highest_prepare is now: #{@highest_prepare}"
-        begin
-          @acceptor_row.highest_prepare = @highest_prepare
-          @acceptor_row.save!
-        rescue Exception => e
-        end
-        puts 'ha'
-        return Response.new(@highest_accepted.number, self)
+        @acceptor_row.highest_prepare = @highest_prepare
+        @acceptor_row.save
+
+        Response.new(@highest_accepted.number, self)
       end
-      puts 'hotdogs'
     end
   end
 
   def request_accept(proposal)
     @propose_mutex.synchronize do
       if proposal.number >= @highest_prepare
-        puts 'squid'
-
         @highest_accepted = proposal
-        begin
-          @acceptor_row.highest_proposal = Marshal.dump(@highest_accepted)
-          @acceptor_row.save
-        rescue Exception => e
-        end
+
+        @acceptor_row.highest_proposal = Marshal.dump(@highest_accepted)
+        @acceptor_row.save
 
         @supervisor.replicas.each do |replica|
-          puts 'octopus'
           replica.learner.report(proposal.value, self)
         end
       end
@@ -68,5 +57,6 @@ class Acceptor
   end
 
   class AcceptorRow < ActiveRecord::Base
+    include DRbUndumped
   end
 end

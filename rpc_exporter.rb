@@ -9,6 +9,8 @@ require 'learner'
 require 'supervisor'
 
 class RPCExporter
+  include DRbUndumped
+
   attr_reader :proposer, :acceptor, :learner
 
   def initialize(supervisor)
